@@ -13,7 +13,7 @@
     <h1 class="text-2xl font-bold text-gray-800 text-center mb-1">Attendance</h1>
     <p class="text-xs text-gray-500 text-center mb-6">Enter your details and submit to record attendance.</p>
 
-    <!-- Status Alert Message -->
+   
     <div id="statusMessage" class="hidden p-3 rounded-lg mb-4 text-sm font-medium"></div>
 
     <form id="attendanceForm" onsubmit="event.preventDefault(); processAttendance();" class="space-y-4">
@@ -60,10 +60,10 @@
     const CLASSROOM_LON = 76.9940189971676;       
     const MAX_ALLOWED_METERS = 40000000;         
 
-    // 1. Google Form POST Endpoint (must end with /formResponse)
+    
     const FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe9vV11iAncO7sTLtkSHBr2trkSf_s6x7bbWnljJc2TYNUlNA/formResponse";
 
-    // 2. Google Form Entry IDs
+   
     const NAME_ENTRY_ID = "entry.1061917837"; 
     const ROLL_ENTRY_ID = "entry.476105439"; 
     const DISTANCE_ENTRY_ID = "entry.1319557064"; 
@@ -84,7 +84,7 @@
         return;
       }
 
-      // Set button to loading state
+      
       submitBtn.disabled = true;
       submitBtn.classList.add("opacity-50", "cursor-not-allowed");
       showMessage("Verifying GPS location...", "info");
