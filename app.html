@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 flex flex-col items-center justify-center">
+
+  <div id="attendanceCard" class="max-w-md w-full bg-white p-6 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 text-center mb-1">Attendance</h1>
+    <p class="text-xs text-gray-500 text-center mb-6">Enter your details and submit to record attendance.</p>
+
+    <!-- Status Alert Message -->
+    <div id="statusMessage" class="hidden p-3 rounded-lg mb-4 text-sm font-medium"></div>
+
+    <form id="attendanceForm" onsubmit="event.preventDefault(); processAttendance();" class="space-y-4">
+      <div>
+        <label for="studentName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+        <input 
+          type="text" 
+          id="studentName" 
+          required 
+          placeholder="e.g. John Doe" 
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label for="rollNo" class="block text-sm font-medium text-gray-700 mb-1">Roll Number</label>
+        <input 
+          type="text" 
+          id="rollNo" 
+          required 
+          placeholder="e.g. 101" 
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <button 
+        type="submit" 
+        id="submitBtn" 
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition duration-200"
+      >
+        Submit Attendance
+      </button>
+    </form>
+  </div>
+
+  <script>
+    // =========================================================================
+    // CONFIGURATION
+    // =========================================================================
+    //31.780950875312186, 76.9940189971676
+    const CLASSROOM_LAT = 31.780950875312186;          // Replace with classroom Latitude
+    const CLASSROOM_LON = 76.9940189971676;          // Replace with classroom Longitude
+    const MAX_ALLOWED_METERS = 40000000;         // Max allowed radius in meters
+
+    // 1. Google Form POST Endpoint (must end with /formResponse)
+    const FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe9vV11iAncO7sTLtkSHBr2trkSf_s6x7bbWnljJc2TYNUlNA/formResponse";
+
+    // 2. Google Form Entry IDs
+    const NAME_ENTRY_ID = "entry.1061917837"; 
+    const ROLL_ENTRY_ID = "entry.476105439"; 
+    const DISTANCE_ENTRY_ID = "entry.1319557064"; 
+
+    // =========================================================================
+    // LOGIC
+    // =========================================================================
+    function processAttendance() {
+      const name = document.getElementById("studentName").value.trim();
+      const rollNo = document.getElementById("rollNo").value.trim();
+      const submitBtn = document.getElementById("submitBtn");
+
+      if (!name || !rollNo) {
+        showMessage("Please fill in both Name and Roll Number.", "error");
+        return;
+      }
+
+      if (!navigator.geolocation) {
+        showMessage("Geolocation is not supported by your browser.", "error");
+        return;
+      }
+
+      // Set button to loading state
+      submitBtn.disabled = true;
+      submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+      showMessage("Verifying GPS location...", "info");
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const userLat = pos.coords.latitude;
+          const userLon = pos.coords.longitude;
+          const distanceMeters = Math.round(getDistance(CLASSROOM_LAT, CLASSROOM_LON, userLat, userLon));
+
+          if (distanceMeters <= MAX_ALLOWED_METERS) {
+            showMessage(`Location verified (${distanceMeters}m away). Submitting attendance...`, "info");
+            sendDirectToGoogleForms(name, rollNo, `${distanceMeters} meters away`);
+          } else {
+            showMessage(`Attendance Blocked! You are ${distanceMeters}m away from classroom (Max allowed: ${MAX_ALLOWED_METERS}m).`, "error");
+            resetButton();
+          }
+        },
+        (err) => {
+          showMessage("Please allow location/GPS access in your mobile browser permissions.", "error");
+          resetButton();
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    // Direct background submission to Google Forms
+    function sendDirectToGoogleForms(name, rollNo, distanceText) {
+      const formData = new FormData();
+      formData.append(NAME_ENTRY_ID, name);
+      formData.append(ROLL_ENTRY_ID, rollNo);
+      formData.append(DISTANCE_ENTRY_ID, distanceText);
+
+      fetch(FORM_ACTION_URL, {
+        method: "POST",
+        mode: "no-cors", // Bypasses CORS restriction for Google Forms submission
+        body: formData
+      })
+      .then(() => {
+        // Show permanent success UI
+        document.getElementById("attendanceCard").innerHTML = `
+          <div class="text-center py-6">
+            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">✓</div>
+            <h2 class="text-xl font-bold text-gray-800 mb-1">Attendance Recorded!</h2>
+            <p class="text-sm text-gray-600">Name: <span class="font-semibold">${name}</span></p>
+            <p class="text-sm text-gray-600">Roll No: <span class="font-semibold">${rollNo}</span></p>
+            <p class="text-xs text-green-600 mt-2 font-medium">GPS Verified (${distanceText})</p>
+          </div>
+        `;
+      })
+      .catch((err) => {
+        console.error(err);
+        showMessage("Failed to submit attendance. Please try again.", "error");
+        resetButton();
+      });
+    }
+
+    // Haversine formula
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3;
+      const rad = Math.PI / 180;
+      const dLat = (lat2 - lat1) * rad;
+      const dLon = (lon2 - lon1) * rad;
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function showMessage(msg, type) {
+      const statusDiv = document.getElementById("statusMessage");
+      statusDiv.classList.remove("hidden", "bg-red-100", "text-red-800", "bg-green-100", "text-green-800", "bg-blue-100", "text-blue-800");
+
+      if (type === "error") {
+        statusDiv.classList.add("bg-red-100", "text-red-800");
+      } else if (type === "success") {
+        statusDiv.classList.add("bg-green-100", "text-green-800");
+      } else {
+        statusDiv.classList.add("bg-blue-100", "text-blue-800");
+      }
+
+      statusDiv.innerText = msg;
+    }
+
+    function resetButton() {
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = false;
+      submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
+    }
+  </script>
+</body>
+</html>
