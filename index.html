@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Made By REman DEYYYYYYYYYYYYYYYYYYYYYYYYYYY HEHEHEHEHE -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -33,7 +34,7 @@
           type="text" 
           id="rollNo" 
           required 
-          placeholder="B26..." 
+          placeholder="B26" 
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -48,14 +49,16 @@
     </form>
   </div>
 
+  <footer class="mt-10 w-full text-center">
+    <p class="text-xs text-gray-400">Developed by GCS IIT Mandi</p>
+  </footer>
+
   <script>
-    // =========================================================================
-    // CONFIGURATION
-    // =========================================================================
+ 
     //31.780950875312186, 76.9940189971676
-    const CLASSROOM_LAT = 31.780950875312186;          // Replace with classroom Latitude
-    const CLASSROOM_LON = 76.9940189971676;          // Replace with classroom Longitude
-    const MAX_ALLOWED_METERS = 40000000;         // Max allowed radius in meters
+    const CLASSROOM_LAT = 31.780950875312186;         
+    const CLASSROOM_LON = 76.9940189971676;       
+    const MAX_ALLOWED_METERS = 40000000;         
 
     // 1. Google Form POST Endpoint (must end with /formResponse)
     const FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe9vV11iAncO7sTLtkSHBr2trkSf_s6x7bbWnljJc2TYNUlNA/formResponse";
@@ -65,9 +68,7 @@
     const ROLL_ENTRY_ID = "entry.476105439"; 
     const DISTANCE_ENTRY_ID = "entry.1319557064"; 
 
-    // =========================================================================
-    // LOGIC
-    // =========================================================================
+ 
     function processAttendance() {
       const name = document.getElementById("studentName").value.trim();
       const rollNo = document.getElementById("rollNo").value.trim();
@@ -110,7 +111,6 @@
       );
     }
 
-    // Direct background submission to Google Forms
     function sendDirectToGoogleForms(name, rollNo, distanceText) {
       const formData = new FormData();
       formData.append(NAME_ENTRY_ID, name);
@@ -119,11 +119,11 @@
 
       fetch(FORM_ACTION_URL, {
         method: "POST",
-        mode: "no-cors", // Bypasses CORS restriction for Google Forms submission
+        mode: "no-cors", 
         body: formData
       })
       .then(() => {
-        // Show permanent success UI
+      
         document.getElementById("attendanceCard").innerHTML = `
           <div class="text-center py-6">
             <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">✓</div>
@@ -141,7 +141,7 @@
       });
     }
 
-    // Haversine formula
+    
     function getDistance(lat1, lon1, lat2, lon2) {
       const R = 6371e3;
       const rad = Math.PI / 180;
