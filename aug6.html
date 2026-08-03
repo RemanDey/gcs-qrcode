@@ -170,7 +170,8 @@
       }
 
       if (!navigator.geolocation) {
-        showMessage("Geolocation is not supported by your browser.", "error");
+        showMessage("Geolocation not available. Submitting attendance without location verification...", "info");
+        sendDirectToGoogleForms(name, rollNo, "GPS unavailable (distance not verified)");
         return;
       }
 
@@ -194,8 +195,8 @@
           }
         },
         (err) => {
-          showMessage("Please allow location/GPS access in your mobile browser permissions.", "error");
-          resetButton();
+          showMessage("Location unavailable. Submitting attendance without location verification...", "info");
+          sendDirectToGoogleForms(name, rollNo, "GPS unavailable (distance not verified)");
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
@@ -222,7 +223,9 @@
             <p class="text-sm text-gray-600">Session: <span class="font-semibold">${SESSION_COURSE}</span></p>
             <p class="text-sm text-gray-600">Name: <span class="font-semibold">${name}</span></p>
             <p class="text-sm text-gray-600">Roll No: <span class="font-semibold">${rollNo}</span></p>
-            <p class="text-xs text-green-600 mt-2 font-medium">GPS Verified (${distanceText})</p>
+            ${distanceText === "GPS unavailable (distance not verified)" 
+              ? `<p class="text-xs text-amber-600 mt-2 font-medium">GPS unavailable — submitted without location verification</p>`
+              : `<p class="text-xs text-green-600 mt-2 font-medium">GPS Verified (${distanceText})</p>`}
           </div>
         `;
       })
