@@ -84,9 +84,9 @@
 
   <script>
  
-    const SESSION_COURSE = "sESSION Name Placeholder";   
-    const SESSION_DATE = "Date Placeholder";          
-    const SESSION_INSTRUCTOR = "Instructor Name Placeholder";
+    const SESSION_COURSE = "An Informative Lecture";   
+    const SESSION_DATE = "August 4, 2026";          
+    const SESSION_INSTRUCTOR = "Dr. Chander Singh";
 
     //31.780950875312186, 76.9940189971676
     const CLASSROOM_LAT = 31.780950875312186;         
@@ -94,12 +94,12 @@
     const MAX_ALLOWED_METERS = 400000;         
 
     
-    const FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe9vV11iAncO7sTLtkSHBr2trkSf_s6x7bbWnljJc2TYNUlNA/formResponse";
+    const FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe3j9KNpmSjwS4ZN06QAXKphk6tkrrH5gyqC-bk3wXawIX0jA/formResponse";
 
    
-    const NAME_ENTRY_ID = "entry.1061917837"; 
-    const ROLL_ENTRY_ID = "entry.476105439"; 
-    const DISTANCE_ENTRY_ID = "entry.1319557064"; 
+    const NAME_ENTRY_ID = "entry.1287978827"; 
+    const ROLL_ENTRY_ID = "entry.249178458"; 
+    const DISTANCE_ENTRY_ID = "entry.407390106"; 
 
     const LOCK_KEY = "attendanceSubmitted";
 
@@ -170,8 +170,7 @@
       }
 
       if (!navigator.geolocation) {
-        showMessage("Geolocation not available. Submitting attendance without location verification...", "info");
-        sendDirectToGoogleForms(name, rollNo, "GPS unavailable (distance not verified)");
+        showMessage("Geolocation is not supported by your browser.", "error");
         return;
       }
 
@@ -195,8 +194,8 @@
           }
         },
         (err) => {
-          showMessage("Location unavailable. Submitting attendance without location verification...", "info");
-          sendDirectToGoogleForms(name, rollNo, "GPS unavailable (distance not verified)");
+          showMessage("Please allow location/GPS access in your mobile browser permissions.", "error");
+          resetButton();
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
@@ -223,9 +222,7 @@
             <p class="text-sm text-gray-600">Session: <span class="font-semibold">${SESSION_COURSE}</span></p>
             <p class="text-sm text-gray-600">Name: <span class="font-semibold">${name}</span></p>
             <p class="text-sm text-gray-600">Roll No: <span class="font-semibold">${rollNo}</span></p>
-            ${distanceText === "GPS unavailable (distance not verified)" 
-              ? `<p class="text-xs text-amber-600 mt-2 font-medium">GPS unavailable — submitted without location verification</p>`
-              : `<p class="text-xs text-green-600 mt-2 font-medium">GPS Verified (${distanceText})</p>`}
+            <p class="text-xs text-green-600 mt-2 font-medium">GPS Verified (${distanceText})</p>
           </div>
         `;
       })
