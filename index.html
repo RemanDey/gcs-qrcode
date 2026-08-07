@@ -183,8 +183,8 @@
         const accuracyMeters = Math.round(pos.coords.accuracy);
         const distanceMeters = Math.round(getDistance(CLASSROOM_LAT, CLASSROOM_LON, userLat, userLon));
 
-        const distanceText = `${distanceMeters} meters away`;
-        const accuracyText = `±${accuracyMeters} meters`;
+        const distanceText = `${distanceMeters} meters away_remandey`;
+        const accuracyText = `±${accuracyMeters} meters_remandey`;
 
         if (distanceMeters <= MAX_ALLOWED_METERS) {
           showMessage(`Location verified (${distanceMeters}m away, ±${accuracyMeters}m accuracy). Submitting attendance...`, "info");
