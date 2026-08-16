@@ -66,7 +66,7 @@
       </div>
 
       <div class="border-t-2 border-gray-200 pt-5">
-        <h2 class="text-lg font-bold text-gray-800 mb-1">Induction Week Feedback</h2>
+        <h2 class="text-lg font-bold text-gray-800 mb-1">Session Feedback</h2>
         <p class="text-xs text-gray-500 mb-4">Help us improve GCS with your honest feedback.</p>
 
         <div class="mb-5">
@@ -83,7 +83,7 @@
         </div>
 
         <div class="mb-4">
-          <label for="feedbackExperience" class="block text-base font-medium text-gray-700 mb-1.5">1. Comments on your overall experience</label>
+          <label for="feedbackExperience" class="block text-base font-medium text-gray-700 mb-1.5">1. Comments on overall experience today</label>
           <textarea 
             id="feedbackExperience" 
             required 
@@ -95,7 +95,7 @@
         </div>
 
         <div class="mb-4">
-          <label for="feedbackTopics" class="block text-base font-medium text-gray-700 mb-1.5">2. Topics and content you explored</label>
+          <label for="feedbackTopics" class="block text-base font-medium text-gray-700 mb-1.5">2. Topics and content you explored today</label>
           <textarea 
             id="feedbackTopics" 
             required 
@@ -107,7 +107,7 @@
         </div>
 
         <div class="mb-4">
-          <label for="feedbackLearned" class="block text-base font-medium text-gray-700 mb-1.5">3. What have you learned in this induction week?</label>
+          <label for="feedbackLearned" class="block text-base font-medium text-gray-700 mb-1.5">3. What have you learned today</label>
           <textarea 
             id="feedbackLearned" 
             required 
@@ -146,9 +146,9 @@
   </footer>
 
   <script>
-    const SESSION_COURSE = "A session on Anti Ragging and Drug Abuse Awareness";   
-    const SESSION_DATE = "August 9, 2026";          
-    const SESSION_INSTRUCTOR = "Adv. Anil Guleria";
+    const SESSION_COURSE = "Health and Physical Fitness";   
+    const SESSION_DATE = "August 16, 2026";          
+    const SESSION_INSTRUCTOR = "Mr. Mir Ranjan Negi";
 
     // Classroom Geofence Target
     const CLASSROOM_LAT = 31.780950875312186;         
@@ -156,16 +156,16 @@
     const MAX_ALLOWED_METERS = 20000; 
     
     // Google Form Entries
-    const FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSc8eSx6CFNCvpDHm17y1aZXVWhva36L5Mfy9THEs46QbBphYA/formResponse";
-    const NAME_ENTRY_ID = "entry.1117495639"; 
-    const ROLL_ENTRY_ID = "entry.1436124716"; 
-    const DISTANCE_ENTRY_ID = "entry.122898561"; 
+    const FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLScoOvwi2Z3Udjodcktwb2BimRhroKKxHliClxHMqHbGC0tohA/formResponse";
+    const NAME_ENTRY_ID = "entry.1793136506"; 
+    const ROLL_ENTRY_ID = "entry.39585022"; 
+    const DISTANCE_ENTRY_ID = "entry.797115948"; 
     // TODO: Replace with real Google Form entry IDs for the feedback questions
-    const RATING_ENTRY_ID = "entry.1984524683"; 
-    const FEEDBACK_EXPERIENCE_ENTRY_ID = "entry.629036836"; 
-    const FEEDBACK_TOPICS_ENTRY_ID = "entry.966158937"; 
-    const FEEDBACK_LEARNED_ENTRY_ID = "entry.1965713805"; 
-    const FEEDBACK_SERVICES_ENTRY_ID = "entry.1869268243"; 
+    const RATING_ENTRY_ID = "entry.908138807"; 
+    const FEEDBACK_EXPERIENCE_ENTRY_ID = "entry.23780728"; 
+    const FEEDBACK_TOPICS_ENTRY_ID = "entry.175428877"; 
+    const FEEDBACK_LEARNED_ENTRY_ID = "entry.822268029"; 
+    const FEEDBACK_SERVICES_ENTRY_ID = "entry.1039021562"; 
 
     const LOCK_KEY = "attendanceSubmitted";
 
